@@ -13,27 +13,27 @@ import_spy.register(DetectCyclicImports(fail=False))
 
 print('BEGIN')
 import_spy.enable()
-import yaml
-import yaml
+import yaml  # noqa: E402
+import yaml  # noqa: E402, F811
 import_spy.disable()
 print('END')
 print()
 
-import yaml
+import yaml  # noqa: E402, F811
 
 print('BEGIN')
 with import_spy.context():
-    from yaml import add_constructor
-    from yaml.parser import AliasEvent
-    import yaml
-    import yaml
-    import yaml.parser
+    from yaml import add_constructor  # noqa: E402, F401
+    from yaml.parser import AliasEvent  # noqa: E402, F401
+    import yaml  # noqa: E402, F811
+    import yaml  # noqa: E402, F811
+    import yaml.parser  # noqa: E402
 print('END')
 print()
 
-import yaml
+import yaml  # noqa: E402, F401
 
 print('BEGIN')
 with import_spy.context():
-    from cyclic_import_package import a
+    from cyclic_import_package import a  # noqa: E402, F401
 print('END')

@@ -5,10 +5,9 @@ from __future__ import print_function
 
 import warnings
 from abc import ABCMeta, abstractmethod
+from collections import namedtuple
 from contextlib import contextmanager
 from functools import wraps
-from collections import namedtuple
-
 
 _original_import = __builtins__['__import__']
 
