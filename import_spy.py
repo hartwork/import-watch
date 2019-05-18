@@ -82,6 +82,10 @@ class CyclicImportWarning(UserWarning):
     pass
 
 
+class CyclicImportError(ImportError):
+    pass
+
+
 class DetectCyclicImports(ImportSpy):
     def __init__(self, fail=False):
         self._fail = fail
@@ -92,7 +96,9 @@ class DetectCyclicImports(ImportSpy):
             for i, import_data in enumerate(history_slice)))
         warnings.warn(message, CyclicImportWarning, stacklevel=4)
         if self._fail:
-            raise ImportError
+            raise CyclicImportError(
+                "Cyclic import for module '{}'".format(
+                    history_slice[-1].module_name))
 
     @staticmethod
     def _all_names_from(import_data):
