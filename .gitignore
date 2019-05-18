@@ -1,2 +1,4 @@
+/build/
+/import_watch.egg-info/
 __pycache__
 *.pyc
