@@ -4,36 +4,38 @@
 from __future__ import print_function
 
 import import_spy
-from import_spy import DetectCyclicImports, ReportOnImports
 
-
-import_spy.reset()
-import_spy.register(ReportOnImports(depth=1))
-import_spy.register(DetectCyclicImports(fail=False))
 
 print('BEGIN')
-import_spy.enable()
+import_spy.report_on_imports(depth=1)
 import yaml  # noqa: E402
 import yaml  # noqa: E402, F811
-import_spy.disable()
+import_spy.reset()
 print('END')
 print()
+
 
 import yaml  # noqa: E402, F811
 
+
 print('BEGIN')
-with import_spy.context():
-    from yaml import add_constructor  # noqa: E402, F401
-    from yaml.parser import AliasEvent  # noqa: E402, F401
-    import yaml  # noqa: E402, F811
-    import yaml  # noqa: E402, F811
-    import yaml.parser  # noqa: E402
+import_spy.deny_cyclic_imports()
+try:
+    from cyclic_import_package import a
+except ImportError as e:
+    print('Exception caught:', e)
+else:
+    assert False, 'Cyclic import went undetected'
+import_spy.reset()
 print('END')
 print()
 
-import yaml  # noqa: E402, F401
+
+import yaml  # noqa: E402, F401, F811
+
 
 print('BEGIN')
-with import_spy.context():
-    from cyclic_import_package import a  # noqa: E402, F401
+import_spy.warn_about_cycle_imports()
+from cyclic_import_package import a  # noqa: E402, F401, F811
+import_spy.reset()
 print('END')
