@@ -6,7 +6,6 @@ from __future__ import print_function
 import warnings
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
-from contextlib import contextmanager
 from functools import wraps
 
 _original_import = __builtins__['__import__']
@@ -52,7 +51,7 @@ def _wrapped_import(*args, **kvargs):
     return module
 
 
-class ImportSpy(object):
+class _ImportSpy(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
@@ -60,7 +59,7 @@ class ImportSpy(object):
         pass
 
 
-class ReportOnImports(ImportSpy):
+class _ReportOnImports(_ImportSpy):
     def __init__(self, depth=None):
         self._max_depth = depth
         self._prev_depth = None
@@ -86,7 +85,7 @@ class CyclicImportError(ImportError):
     pass
 
 
-class DetectCyclicImports(ImportSpy):
+class _DetectCyclicImports(_ImportSpy):
     def __init__(self, fail=False):
         self._fail = fail
 
@@ -128,32 +127,18 @@ class DetectCyclicImports(ImportSpy):
             self.handle_cyclic_import(history_slice)
 
 
-def _instance(clazz_or_instance):
-    if isinstance(clazz_or_instance, type):
-        return clazz_or_instance()
-    return clazz_or_instance
+def _register(spy):
+    _import_spies.append(spy)
 
 
-def _list_of_instances(list_or_item):
-    if list_or_item is None:
-        return []
-    if isinstance(list_or_item, (list, tuple)):
-        return [_instance(item) for item in list_or_item]
-    return [_instance(list_or_item)]
-
-
-def register(spy):
-    _import_spies.append(_instance(spy))
-
-
-def enable():
+def _enable():
     global _is_enabled
 
     __builtins__['__import__'] = _wrapped_import
     _is_enabled = True
 
 
-def disable():
+def _disable():
     global _is_enabled
 
     __builtins__['__import__'] = _original_import
@@ -163,50 +148,23 @@ def disable():
 def reset():
     global _import_spies
 
-    disable()
+    _disable()
     _import_spies = []
 
 
-@contextmanager
-def context(spies=None, enabled=True):
-    global _is_enabled
-    global _import_spies
-
-    if _is_enabled and not enabled:
-        disable()
-        yield
-        enable()
-    elif not _is_enabled and enabled:
-        if spies is not None:
-            spies_backup = _import_spies
-            _import_spies = _list_of_instances(spies)
-        enable()
-
-        yield
-
-        disable()
-        if spies is not None:
-            _import_spies = spies_backup
-    else:
-        yield
-
-
 def deny_cyclic_imports():
-    register(DetectCyclicImports(fail=True))
-    enable()
+    _register(_DetectCyclicImports(fail=True))
+    _enable()
 
 
 def report_on_imports(depth=None):
-    register(ReportOnImports(depth=depth))
-    enable()
+    _register(_ReportOnImports(depth=depth))
+    _enable()
 
 
 def warn_about_cycle_imports():
-    register(DetectCyclicImports(fail=False))
-    enable()
-
-
-register(ReportOnImports)
+    _register(_DetectCyclicImports(fail=False))
+    _enable()
 
 
 __all__ = []  # i.e. discourage use of star imports
