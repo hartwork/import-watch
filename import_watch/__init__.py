@@ -68,12 +68,15 @@ class _ReportingWatcher(_ImportWatcher):
         depth = len(history)
         indent = '  ' * depth
 
+        depth += 1
+
         if self._max_depth is None or depth <= self._max_depth:
             import_data = _extract_import_data(args)
             print(indent + _format_import_data(import_data))
         elif self._max_depth is not None and depth == self._max_depth + 1 \
                 and depth > self._prev_depth:
             print(indent + '[..]')
+
         self._prev_depth = depth
 
 

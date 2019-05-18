@@ -7,7 +7,7 @@ import import_watch
 
 
 print('BEGIN')
-import_watch.report_on_imports(depth=1)
+import_watch.report_on_imports(depth=2)
 import yaml  # noqa: E402
 import yaml  # noqa: E402, F811
 import_watch.reset()
