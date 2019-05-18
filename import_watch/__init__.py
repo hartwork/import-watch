@@ -12,7 +12,7 @@ _original_import = __builtins__['__import__']
 
 _import_stack = []
 
-_import_spies = []
+_import_watchers = []
 
 _is_enabled = False
 
@@ -39,8 +39,8 @@ def _format_import_data(import_data):
 def _wrapped_import(*args, **kvargs):
     global _import_stack
 
-    for spy in _import_spies:
-        spy.process(args, kvargs, _import_stack)
+    for watcher in _import_watchers:
+        watcher.process(args, kvargs, _import_stack)
 
     _import_stack.append(_extract_import_data(args))
     try:
@@ -51,7 +51,7 @@ def _wrapped_import(*args, **kvargs):
     return module
 
 
-class _ImportSpy(object):
+class _ImportWatcher(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
@@ -59,7 +59,7 @@ class _ImportSpy(object):
         pass
 
 
-class _ReportOnImports(_ImportSpy):
+class _ReportingWatcher(_ImportWatcher):
     def __init__(self, depth=None):
         self._max_depth = depth
         self._prev_depth = None
@@ -85,7 +85,7 @@ class CyclicImportError(ImportError):
     pass
 
 
-class _DetectCyclicImports(_ImportSpy):
+class _CycleDetectionWatcher(_ImportWatcher):
     def __init__(self, fail=False):
         self._fail = fail
 
@@ -127,8 +127,8 @@ class _DetectCyclicImports(_ImportSpy):
             self.handle_cyclic_import(history_slice)
 
 
-def _register(spy):
-    _import_spies.append(spy)
+def _register(watcher):
+    _import_watchers.append(watcher)
 
 
 def _enable():
@@ -146,24 +146,24 @@ def _disable():
 
 
 def reset():
-    global _import_spies
+    global _import_watchers
 
     _disable()
-    _import_spies = []
+    _import_watchers = []
 
 
 def deny_cyclic_imports():
-    _register(_DetectCyclicImports(fail=True))
+    _register(_CycleDetectionWatcher(fail=True))
     _enable()
 
 
 def report_on_imports(depth=None):
-    _register(_ReportOnImports(depth=depth))
+    _register(_ReportingWatcher(depth=depth))
     _enable()
 
 
 def warn_about_cycle_imports():
-    _register(_DetectCyclicImports(fail=False))
+    _register(_CycleDetectionWatcher(fail=False))
     _enable()
 
 
