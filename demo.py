@@ -21,7 +21,7 @@ import yaml  # noqa: E402, F811
 print('BEGIN')
 import_watch.deny_cyclic_imports()
 try:
-    from cyclic_import_package import a
+    from import_watch._cyclic_import_package import a
 except ImportError as e:
     print('Exception caught:', e)
 else:
@@ -36,6 +36,6 @@ import yaml  # noqa: E402, F401, F811
 
 print('BEGIN')
 import_watch.warn_about_cycle_imports()
-from cyclic_import_package import a  # noqa: E402, F401, F811
+from import_watch._cyclic_import_package import a  # noqa: E402, F401, F811
 import_watch.reset()
 print('END')
