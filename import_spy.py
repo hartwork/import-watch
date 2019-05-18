@@ -191,6 +191,21 @@ def context(spies=None, enabled=True):
         yield
 
 
+def deny_cyclic_imports():
+    register(DetectCyclicImports(fail=True))
+    enable()
+
+
+def report_on_imports(depth=None):
+    register(ReportOnImports(depth=depth))
+    enable()
+
+
+def warn_about_cycle_imports():
+    register(DetectCyclicImports(fail=False))
+    enable()
+
+
 register(ReportOnImports)
 
 
