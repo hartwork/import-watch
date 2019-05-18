@@ -22,13 +22,13 @@ Enjoy!
 ## Trace imports
 ```python
 import import_watch
-import_watch.report_on_imports(depth=2)  # default depth is unlimited
+import_watch.trace_imports(depth=2)  # default depth is unlimited
 ```
 
 ## Detect and warn about cyclic imports (at runtime)
 ```python
 import import_watch
-import_watch.warn_about_cycle_imports()
+import_watch.warn_about_cyclic_imports()
 ```
 
 ## Deny cyclic imports (at runtime)

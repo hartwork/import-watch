@@ -7,7 +7,7 @@ import import_watch
 
 
 print('BEGIN')
-import_watch.report_on_imports(depth=2)
+import_watch.trace_imports(depth=2)
 import yaml  # noqa: E402
 import yaml  # noqa: E402, F811
 import_watch.reset()
@@ -35,7 +35,7 @@ import yaml  # noqa: E402, F401, F811
 
 
 print('BEGIN')
-import_watch.warn_about_cycle_imports()
+import_watch.warn_about_cyclic_imports()
 from import_watch._cyclic_import_package import a  # noqa: E402, F401, F811
 import_watch.reset()
 print('END')

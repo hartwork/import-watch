@@ -59,7 +59,7 @@ class _ImportWatcher(object):
         pass
 
 
-class _ReportingWatcher(_ImportWatcher):
+class _TracingWatcher(_ImportWatcher):
     def __init__(self, depth=None):
         self._max_depth = depth
         self._prev_depth = None
@@ -160,12 +160,12 @@ def deny_cyclic_imports():
     _enable()
 
 
-def report_on_imports(depth=None):
-    _register(_ReportingWatcher(depth=depth))
+def trace_imports(depth=None):
+    _register(_TracingWatcher(depth=depth))
     _enable()
 
 
-def warn_about_cycle_imports():
+def warn_about_cyclic_imports():
     _register(_CycleDetectionWatcher(fail=False))
     _enable()
 
