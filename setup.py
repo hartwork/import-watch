@@ -32,11 +32,15 @@ if __name__ == '__main__':
             name='import-watch',
             url='https://github.com/hartwork/import-watch',
             description=_description,
-            long_description=_description,
+            long_description=open('README.md').read(),
+            long_description_content_type='text/markdown',
             license='MIT',
             version='2.0.0',
             author='Sebastian Pipping',
             author_email='sebastian@pipping.org',
+            setup_requires=[
+                'setuptools>=38.6.0',  # for long_description_content_type
+            ],
             packages=find_packages(),
             classifiers=[c for c in _classifiers.split('\n') if c],
             )
