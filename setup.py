@@ -35,7 +35,7 @@ if __name__ == '__main__':
             long_description=open('README.md').read(),
             long_description_content_type='text/markdown',
             license='MIT',
-            version='2.0.0',
+            version='2.0.1',
             author='Sebastian Pipping',
             author_email='sebastian@pipping.org',
             setup_requires=[
