@@ -1,4 +1,4 @@
-#! /usr/bin/env python2
+#! /usr/bin/env python
 # Copyright (C) 2019 Sebastian Pipping <sebastian@pipping.org>
 # Licensed under the MIT license
 
