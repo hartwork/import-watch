@@ -23,7 +23,13 @@ _ImportData = namedtuple('_ImportData', [
 
 
 def _extract_import_data(args):
-    return _ImportData(module_name=args[0], symbols_tuple_or_none=args[3])
+    try:
+        symbols_tuple_or_none = args[3]
+    except IndexError:
+        symbols_tuple_or_none = None
+
+    return _ImportData(module_name=args[0],
+                       symbols_tuple_or_none=symbols_tuple_or_none)
 
 
 def _format_import_data(import_data):
