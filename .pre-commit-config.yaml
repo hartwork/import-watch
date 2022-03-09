@@ -14,8 +14,8 @@ repos:
       - id: flake8
       - id: trailing-whitespace
 
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v4.3.17
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
     hooks:
       - id: isort
         exclude: '^demo\.py$'
